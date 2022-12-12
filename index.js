@@ -1,6 +1,7 @@
 const Discord = require('discord.js');
-
 const client = new Discord.Client();
+const Google = require('./commands/google');
+const Ping = require('./commands/ping');
 
 client.on('ready', function(){
     client.user.setAvatar('./puke.jpg')
@@ -9,14 +10,18 @@ client.on('ready', function(){
     client.user.setActivity('a la pignouf oui').catch(console.error)
 })
 
+client.on('guildMemberAdd', function (member){
+    member.createDM().then(function(channel){
+        channel.send('Bienvenue sur le serveur WouariServ' + member.displayName)
+    }).catch(console.error)
+})
+
+client.on('message', function (message){
+    let commandeUsed = Google.parse(message) || Ping.parse(message)
+})
+
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
 });
 
-client.on('message', msg => {
-  if (msg.content === 'cha') {
-    msg.channel.send('kira');
-  }
-});
-
-client.login('MON_TOKEN');
+client.login('TOKEN');
